@@ -1,1 +1,4 @@
 mlflow
+pandas
+sklearn
+dagshub

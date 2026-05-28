@@ -22,6 +22,17 @@ logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
 
 
+################################################################################################
+# Dagshub Remote Server: All mlflow experiments directly gets pushed to Dagshub
+import dagshub
+dagshub.init(repo_owner='BharatKumarNaik', repo_name='MLFlow-Dagshub-and-BentoML', mlflow=True)
+
+import mlflow
+with mlflow.start_run():
+  mlflow.log_param('parameter name', 'value')
+  mlflow.log_metric('metric name', 1)
+
+################################################################################################
 def eval_metrics(actual, pred):
     rmse = np.sqrt(mean_squared_error(actual, pred))
     mae = mean_absolute_error(actual, pred)
@@ -87,14 +98,10 @@ if __name__ == "__main__":
         Useful in production deployments
         '''
 
-        ## For Remote server only(DAGShub)
-
-        # remote_server_uri=""
-        # mlflow.set_tracking_uri(remote_server_uri)
-
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
         # Model registry does not work with file store
+        print(tracking_url_type_store)
         if tracking_url_type_store != "file":
             # Register the model
             # There are other ways to use the Model Registry, which depends on the use case,
